@@ -8,6 +8,21 @@ body, html {
   margin: 0;
 }
 
+.portrait {
+  /* The image used */
+  background-image: url("OnlyBg.jpg");
+
+  /* Full height */
+  height: 111%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: block;
+  z-index: 50;
+}
+
 .bg {
   /* The image used */
   background-image: url("ChooseProduct.jpg");
@@ -19,7 +34,7 @@ body, html {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  display: block;
+  display: none;
   z-index: -1;
 }
 
@@ -119,13 +134,24 @@ body, html {
     cursor: pointer;
 }
 
+.portraitInfoButton{
+    height: 20%;
+    width: 80%;
+    margin: -50px -50px;
+    position: relative;
+    top: 40%;
+    left: 25%;
+    border: 1px transparent;
+    background-color: #6e8512;
+    cursor: pointer;
+}
 
 </style>
 </head>
 <body>
 
 
-<div class="bg">
+<div id="bg" class="bg">
     <div id="soundImg" class="soundOff"></div>
     <div id="yellowPacket" class="selectionYellow"></div>
     <div id="greenPacket" class="selectionGreen"></div>
@@ -136,9 +162,79 @@ body, html {
         <a href="game.html"> <button class="playButton" type="button"></button></a>
     </div>
 </div>
+<div id="portrait" class="portrait">
+    
+</div>
 
 
 <script>
+
+var elem = document.documentElement;
+function openFullscreen() {
+    if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+    }
+}
+
+/* Close fullscreen */
+function closeFullscreen() {
+  if (elem.exitFullscreen) {
+    elem.exitFullscreen();
+  } else if (elem.webkitExitFullscreen) { /* Safari */
+    elem.webkitExitFullscreen();
+  } else if (elem.msExitFullscreen) { /* IE11 */
+    elem.msExitFullscreen();
+  }
+}
+
+var isLandscape = false;
+
+var previousOrientation = window.orientation;
+var checkOrientation = function(){
+    if(window.orientation !== previousOrientation){
+        previousOrientation = window.orientation;
+        // orientation changed, do your magic here
+        console.log(window.orientation);
+
+        if(window.orientation == "0"){
+                     document.getElementById("bg").style.display = "none";
+                     document.getElementById("portrait").style.display = "block";
+
+                    closeFullscreen();
+
+                    window.scrollTo(0,0);
+                    isLandscape = false;
+        }else{
+                    document.getElementById("bg").style.display = "block";
+                    document.getElementById("portrait").style.display = "none";
+
+                    
+                    openFullscreen();
+
+                    window.scrollTo(0,1);
+                    isLandscape = true;
+        }
+        
+    }
+};
+
+window.addEventListener("resize", checkOrientation, false);
+window.addEventListener("orientationchange", checkOrientation, false);
+
+// (optional) Android doesn't always fire orientationChange on 180 degree turns
+setInterval(checkOrientation, 2000);
+
+window.onscroll = function(){
+    if(isLandscape){
+        window.scrollTo(0,1);
+    }
+};
+
+///////////////
 
     var selectedPacket = "green";
     var sound = true;
